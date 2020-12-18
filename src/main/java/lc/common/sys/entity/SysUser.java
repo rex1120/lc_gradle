@@ -2,6 +2,7 @@ package lc.common.sys.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -67,12 +68,30 @@ public class SysUser extends BasePojo {
      */
     private Integer gender;
 
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @TableField(fill = FieldFill.INSERT)
+    private Long createUserId;
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @TableField(fill = FieldFill.INSERT)
+    private Long updateUserId;
+
 
     /**
      * 分页对象
      */
     @TableField(exist = false)
     public Page<SysUser> page;
+    /**
+     * token
+     */
+    @TableField(exist = false)
+    public String token;
 
     /**
      * @return java.util.function.Function<lc.common.sys.entity.SysUser, java.lang.Object>

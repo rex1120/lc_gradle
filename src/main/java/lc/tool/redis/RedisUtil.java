@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,11 +20,16 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtil {
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
 
-    public RedisUtil(RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    private static RedisTemplate<String, Object> redisTemplate;
+
+    public static RedisTemplate<String, Object> getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    @Resource
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+        RedisUtil.redisTemplate = redisTemplate;
     }
 
     /**
@@ -88,7 +94,7 @@ public class RedisUtil {
      * @param key 键
      * @return 值
      */
-    public Object get(String key){
+    public static Object get(String key){
         return key==null?null:redisTemplate.opsForValue().get(key);
     }
 

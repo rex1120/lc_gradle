@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * @description:
@@ -14,6 +17,7 @@ import lombok.Data;
  */
 @Data
 public abstract class BasePojo extends Model<BasePojo> {
+
     /**
      * 是否正序排序
      */

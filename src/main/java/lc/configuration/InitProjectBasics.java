@@ -14,7 +14,7 @@ import java.util.Base64;
  * @author: lc
  * @time: 2020/9/16 9:33
  */
-@Component
+//@Component
 public class InitProjectBasics {
 
     @Resource

@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.api.R;
 import lc.common.sys.entity.SysCover;
 import lc.common.sys.service.SysCoverService;
 import lc.configuration.ConstantsPile;
+import lc.tool.JwtUtil;
 import lc.tool.RSAUtils;
 import lc.common.sys.entity.SysUser;
 import lc.common.sys.dao.SysUserDao;
@@ -33,8 +34,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     private SysUserDao sysUserDao;
     @Resource
     private SysCoverService sysCoverService;
-    @Resource
-    private RedisUtil redisUtil;
 
     @Override
     public R loginAction(SysUser sysUser, HttpServletResponse response) {
@@ -44,7 +43,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
         }
         try {
             //获取存储在redis中的私钥
-            String privateKey = redisUtil.get(ConstantsPile.RSA_PRIVATE_KEY).toString();
+            String privateKey = RedisUtil.get(ConstantsPile.RSA_PRIVATE_KEY).toString();
             //rsa解密数据，获得原始密码
             String realPwd = RSAUtils.decrypt(sysUser.getPwd(), RSAUtils.getPrivateKey(privateKey));
             //找到数据库存入的des加密数据
@@ -55,6 +54,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
             String decodeStr = des.decryptStr(sysCover.getCoverStr());
             //匹配加密数据是否一致
             if (realPwd.equals(decodeStr)){
+                queryUser.token = JwtUtil.sign(queryUser);
+                SysUser tokenUser = JwtUtil.getUserByToken(response,queryUser.token);
+                System.out.println(tokenUser);
                 return R.ok(queryUser).setMsg("登录成功！");
             }else{
                 return R.failed("登录失败！");
